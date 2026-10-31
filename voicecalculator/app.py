@@ -7,10 +7,6 @@ import re
 
 app = Flask(__name__)
 
-# -------------------------------
-# Calculator configuration
-# -------------------------------
-
 MAX_EXPRESSION_LENGTH = 250
 MAX_POWER = 100
 
@@ -35,10 +31,7 @@ CONSTANTS = {
 }
 
 
-# -------------------------------
-# Scientific functions
-# Trigonometry uses degrees
-# -------------------------------
+# Scientific functions use degrees
 
 def sin_deg(x):
     return math.sin(math.radians(x))
@@ -82,10 +75,6 @@ FUNCTIONS = {
 }
 
 
-# -------------------------------
-# Safe mathematical evaluator
-# -------------------------------
-
 def evaluate(node, steps):
 
     if isinstance(node, ast.Expression):
@@ -109,7 +98,6 @@ def evaluate(node, steps):
 
         value = evaluate(node.operand, steps)
         answer = operation(value)
-
         steps.append(f"Apply sign: {answer}")
         return answer
 
@@ -126,7 +114,6 @@ def evaluate(node, steps):
             raise ValueError("Power is too large")
 
         answer = operation(left, right)
-
         steps.append(f"{left} {type(node.op).__name__} {right} = {answer}")
         return answer
 
@@ -150,15 +137,10 @@ def evaluate(node, steps):
 
         answer = function(arguments[0])
         steps.append(f"{name}({arguments[0]}) = {answer}")
-
         return answer
 
     raise ValueError("Invalid mathematical expression")
 
-
-# -------------------------------
-# Convert spoken expressions
-# -------------------------------
 
 def prepare_expression(expression):
 
@@ -187,16 +169,9 @@ def prepare_expression(expression):
     for old, new in replacements.items():
         expression = expression.replace(old, new)
 
-    # Convert 5 x 6 to 5 * 6
-    expression = re.sub(
-        r"(?<=\d)\s*x\s*(?=\d)",
-        "*",
-        expression
-    )
-
+    expression = re.sub(r"(?<=\d)\s*x\s*(?=\d)", "*", expression)
     expression = expression.replace(" ", "")
 
-    # Convert percentage values
     expression = re.sub(
         r"(\d+(?:\.\d+)?)%",
         r"(\1/100)",
@@ -205,10 +180,6 @@ def prepare_expression(expression):
 
     return expression
 
-
-# -------------------------------
-# Validate expression
-# -------------------------------
 
 def validate_expression(expression):
 
@@ -224,20 +195,13 @@ def validate_expression(expression):
         raise ValueError("Invalid characters in calculation")
 
 
-# -------------------------------
-# Main calculator function
-# -------------------------------
-
 def calculate_expression(expression):
 
     expression = prepare_expression(expression)
-
     validate_expression(expression)
 
     steps = []
-
     tree = ast.parse(expression, mode="eval")
-
     result = evaluate(tree, steps)
 
     if isinstance(result, complex):
@@ -252,31 +216,25 @@ def calculate_expression(expression):
     return result, steps
 
 
-# -------------------------------
-# Website home page
-# -------------------------------
-
 @app.route("/")
 def home():
     return render_template("index.html")
 
 
-# -------------------------------
-# Calculation API
-# -------------------------------
-
 @app.route("/calculate", methods=["POST"])
 def calculate():
 
     try:
-
         data = request.get_json(silent=True) or {}
 
+        # Accept all common frontend input names, including "question"
         expression = (
-            data.get("expression")
+            data.get("question")
+            or data.get("expression")
             or data.get("calculation")
             or data.get("input")
             or data.get("text")
+            or request.form.get("question")
             or request.form.get("expression")
             or request.form.get("calculation")
             or request.form.get("input")
@@ -296,34 +254,28 @@ def calculate():
             "success": True,
             "expression": expression,
             "result": result,
+            "answer": result,
             "steps": steps
         })
 
     except ZeroDivisionError:
-
         return jsonify({
             "success": False,
             "error": "Cannot divide by zero"
         }), 400
 
     except OverflowError:
-
         return jsonify({
             "success": False,
             "error": "Number is too large"
         }), 400
 
     except Exception as error:
-
         return jsonify({
             "success": False,
             "error": str(error) or "Invalid calculation"
         }), 400
 
-
-# -------------------------------
-# Health check
-# -------------------------------
 
 @app.route("/health")
 def health():
@@ -332,10 +284,6 @@ def health():
         "calculator": "Rishav's Calculator"
     })
 
-
-# -------------------------------
-# Start server
-# -------------------------------
 
 if __name__ == "__main__":
     app.run(
