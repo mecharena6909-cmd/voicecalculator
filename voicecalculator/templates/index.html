@@ -1,0 +1,291 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Google Search Console Verification -->
+    <meta name="google-site-verification"
+          content="ugNqtReIBORWjvmHZWHtdlhS_gTzaQPPcT1lYxbKif4" />
+
+    <title>Rishav's Calculator</title>
+
+    <meta name="description"
+          content="Rishav's Calculator is a smart voice-controlled calculator. Ask mathematical questions and get instant answers.">
+
+    <meta name="keywords"
+          content="Rishav Calculator, Voice Calculator, Online Calculator, Smart Calculator">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #080b20, #172554, #312e81);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .calculator {
+            width: 100%;
+            max-width: 480px;
+            background: rgba(255,255,255,0.08);
+            padding: 30px;
+            border-radius: 25px;
+            border: 1px solid rgba(255,255,255,0.15);
+            box-shadow: 0 15px 50px rgba(0,0,0,0.4);
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 30px;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #c7d2fe;
+            margin-bottom: 25px;
+        }
+
+        input {
+            width: 100%;
+            padding: 17px;
+            border: none;
+            outline: none;
+            border-radius: 12px;
+            font-size: 17px;
+            margin-bottom: 15px;
+            background: #f8fafc;
+            color: #111827;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            margin: 7px 0;
+            border: none;
+            border-radius: 12px;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            transform: scale(1.02);
+            opacity: 0.9;
+        }
+
+        .calculate {
+            background: #6366f1;
+            color: white;
+        }
+
+        .speak {
+            background: #16a34a;
+            color: white;
+        }
+
+        .answer {
+            margin-top: 22px;
+            padding: 20px;
+            border-radius: 15px;
+            background: rgba(0,0,0,0.25);
+            min-height: 65px;
+            font-size: 19px;
+            overflow-wrap: anywhere;
+        }
+
+        .footer {
+            margin-top: 25px;
+            color: #c7d2fe;
+            font-size: 13px;
+        }
+
+        #status {
+            color: #a5f3fc;
+            font-size: 14px;
+            min-height: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="calculator">
+
+        <h1>🧮 Rishav's Calculator</h1>
+
+        <p class="subtitle">
+            Your Smart Voice Calculator
+        </p>
+
+        <input
+            type="text"
+            id="question"
+            placeholder="Ask me anything..."
+            autocomplete="off"
+        >
+
+        <button class="calculate" onclick="calculate()">
+            Calculate 🚀
+        </button>
+
+        <button class="speak" onclick="startListening()">
+            🎤 Speak
+        </button>
+
+        <p id="status"></p>
+
+        <div class="answer" id="answer">
+            Your answer will appear here.
+        </div>
+
+        <div class="footer">
+            Made with ❤️ by Rishav
+        </div>
+
+    </div>
+
+    <script>
+
+        async function calculate() {
+
+            const question = document.getElementById("question").value.trim();
+
+            const answerBox = document.getElementById("answer");
+            const status = document.getElementById("status");
+
+            if (!question) {
+                answerBox.innerText = "Please enter a question!";
+                return;
+            }
+
+            answerBox.innerText = "Calculating...";
+            status.innerText = "";
+
+            try {
+
+                const response = await fetch("/calculate", {
+
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        question: question
+                    })
+
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || "Calculation failed");
+                }
+
+                answerBox.innerText = data.answer;
+
+                speakAnswer(data.answer);
+
+            } catch (error) {
+
+                answerBox.innerText = "Error: " + error.message;
+
+            }
+
+        }
+
+        function startListening() {
+
+            const SpeechRecognition =
+                window.SpeechRecognition ||
+                window.webkitSpeechRecognition;
+
+            if (!SpeechRecognition) {
+                document.getElementById("status").innerText =
+                    "Voice recognition is not supported in this browser.";
+                return;
+            }
+
+            const recognition = new SpeechRecognition();
+
+            recognition.lang = "en-IN";
+            recognition.continuous = false;
+            recognition.interimResults = false;
+
+            document.getElementById("status").innerText =
+                "🎤 Listening...";
+
+            recognition.onresult = function(event) {
+
+                const text = event.results[0][0].transcript;
+
+                document.getElementById("question").value = text;
+
+                document.getElementById("status").innerText =
+                    "You said: " + text;
+
+                calculate();
+
+            };
+
+            recognition.onerror = function(event) {
+
+                document.getElementById("status").innerText =
+                    "Voice error: " + event.error;
+
+            };
+
+            recognition.onend = function() {
+
+                if (document.getElementById("status").innerText ===
+                    "🎤 Listening...") {
+                    document.getElementById("status").innerText =
+                        "Listening stopped.";
+                }
+
+            };
+
+            recognition.start();
+
+        }
+
+        function speakAnswer(text) {
+
+            if (!("speechSynthesis" in window)) return;
+
+            window.speechSynthesis.cancel();
+
+            const speech = new SpeechSynthesisUtterance(String(text));
+
+            speech.lang = "en-IN";
+            speech.rate = 1;
+
+            window.speechSynthesis.speak(speech);
+
+        }
+
+        document.getElementById("question").addEventListener(
+            "keydown",
+            function(event) {
+                if (event.key === "Enter") {
+                    calculate();
+                }
+            }
+        );
+
+    </script>
+
+</body>
+</html>
