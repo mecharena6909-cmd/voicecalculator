@@ -4,14 +4,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <meta name="google-site-verification" content="ugNqtReIBORWjvmHZWHtdlhS_gTzaQPPcT1lYxbKif4">
 
 <title>Rishav's Calculator</title>
-<meta name="description" content="Rishav's Calculator - A smart voice and scientific calculator.">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
@@ -19,247 +15,159 @@
     box-sizing: border-box;
 }
 
-:root {
-    --bg: #080b14;
-    --panel: #111827;
-    --text: #f8fafc;
-    --muted: #94a3b8;
-    --accent: #8b5cf6;
-    --accent2: #06b6d4;
-}
-
 body {
     margin: 0;
     min-height: 100vh;
-    font-family: 'Space Grotesk', sans-serif;
-    background:
-        radial-gradient(circle at 15% 15%, #312e8155, transparent 40%),
-        radial-gradient(circle at 85% 80%, #0891b255, transparent 40%),
-        var(--bg);
-    color: var(--text);
+    padding: 25px 15px;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 20px;
+    font-family: 'Space Grotesk', sans-serif;
+    color: white;
+    background:
+        radial-gradient(circle at top left, #243b65, transparent 40%),
+        radial-gradient(circle at bottom right, #40205c, transparent 40%),
+        #080d19;
 }
 
 .calculator {
     width: 100%;
-    max-width: 520px;
-    background: rgba(17, 24, 39, 0.85);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 28px;
-    padding: 30px;
-    box-shadow: 0 25px 80px rgba(0,0,0,0.45);
-    backdrop-filter: blur(20px);
-}
-
-.top {
-    text-align: center;
-    margin-bottom: 28px;
-}
-
-.logo {
-    width: 70px;
-    height: 70px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 0 auto 15px;
-    border-radius: 22px;
-    background: linear-gradient(135deg, #8b5cf6, #06b6d4);
-    font-size: 32px;
-    box-shadow: 0 10px 30px #8b5cf644;
+    max-width: 410px;
+    padding: 25px;
+    border: 1px solid #ffffff20;
+    border-radius: 25px;
+    background: #101a2bdd;
+    box-shadow: 0 20px 70px #0008;
 }
 
 h1 {
-    font-size: 28px;
-    margin: 0;
-    letter-spacing: -1px;
+    text-align: center;
+    font-size: 25px;
+    margin: 0 0 5px;
 }
 
 .subtitle {
-    color: var(--muted);
-    font-size: 14px;
-    margin-top: 8px;
-}
-
-.label {
+    text-align: center;
+    color: #aab7d0;
     font-size: 13px;
-    color: var(--muted);
-    display: block;
-    text-align: left;
-    margin-bottom: 10px;
+    margin-bottom: 22px;
 }
 
-.input-wrap {
-    position: relative;
-}
-
-input {
-    width: 100%;
-    padding: 18px;
-    padding-right: 50px;
-    border: 1px solid #334155;
+.display {
+    background: #080f1e;
+    border: 1px solid #ffffff15;
     border-radius: 16px;
-    outline: none;
-    font-family: inherit;
-    font-size: 16px;
-    color: white;
-    background: #0b1220;
-    transition: 0.2s;
+    padding: 17px;
+    margin-bottom: 17px;
+    min-height: 115px;
 }
 
-input:focus {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px #8b5cf622;
-}
-
-input::placeholder {
-    color: #64748b;
-}
-
-.clear {
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: none;
+#expression {
+    width: 100%;
+    background: transparent;
     border: none;
-    color: #94a3b8;
-    cursor: pointer;
-    font-size: 20px;
+    outline: none;
+    color: white;
+    font-size: 25px;
+    font-family: inherit;
+    text-align: right;
 }
 
-.buttons {
+#answer {
+    text-align: right;
+    color: #43e6a0;
+    font-size: 27px;
+    font-weight: 700;
+    margin-top: 12px;
+    overflow-wrap: anywhere;
+}
+
+.controls {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 12px;
-    margin-top: 16px;
+    margin-bottom: 17px;
 }
 
-button {
+.control {
     border: none;
-    border-radius: 14px;
-    padding: 15px;
-    cursor: pointer;
+    border-radius: 13px;
+    padding: 14px 8px;
+    color: white;
     font-family: inherit;
     font-size: 15px;
     font-weight: 700;
-    transition: transform 0.2s, opacity 0.2s;
+    cursor: pointer;
 }
 
-button:hover {
-    transform: translateY(-2px);
-    opacity: 0.92;
+.speak {
+    background: linear-gradient(135deg, #1675ee, #3850d8);
 }
 
-button:active {
-    transform: scale(0.97);
+.listen {
+    background: linear-gradient(135deg, #8b45ed, #6134c9);
 }
 
-.calculate {
-    background: linear-gradient(135deg, #8b5cf6, #6366f1);
+.control:active,
+.key:active {
+    transform: scale(.96);
+}
+
+.keypad {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+.key {
+    border: 1px solid #ffffff12;
+    border-radius: 13px;
+    min-height: 57px;
+    background: #202d43;
     color: white;
+    font-family: inherit;
+    font-size: 21px;
+    font-weight: 600;
+    cursor: pointer;
 }
 
-.mic {
-    background: linear-gradient(135deg, #0891b2, #06b6d4);
+.operator {
+    background: #30415d;
+    color: #8dbaff;
+}
+
+.clear {
+    background: #79364a;
+    color: #ffd5df;
+}
+
+.equals {
+    background: #087b58;
     color: white;
-}
-
-.mic.listening {
-    background: #dc2626;
-    animation: pulse 1s infinite;
-}
-
-@keyframes pulse {
-    50% {
-        opacity: 0.6;
-    }
 }
 
 .status {
-    color: #67e8f9;
-    font-size: 13px;
-    min-height: 22px;
-    margin: 14px 0 0;
+    min-height: 20px;
     text-align: center;
-}
-
-.result {
-    margin-top: 25px;
-    border: 1px solid #334155;
-    border-radius: 20px;
-    padding: 22px;
-    background: linear-gradient(135deg, #1e293b88, #0f172a);
-    min-height: 130px;
-}
-
-.result-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    color: var(--muted);
+    color: #aab7d0;
     font-size: 12px;
-    letter-spacing: 1px;
-    text-transform: uppercase;
+    margin-top: 15px;
 }
 
-.result-value {
-    font-size: 36px;
-    font-weight: 700;
-    overflow-wrap: anywhere;
-    margin-top: 18px;
-    color: #a5b4fc;
-}
-
-.result-actions {
-    display: flex;
-    gap: 10px;
-    margin-top: 18px;
-}
-
-.small-btn {
-    background: #1e293b;
-    color: #cbd5e1;
-    border: 1px solid #334155;
-    padding: 10px 14px;
-    font-size: 13px;
-}
-
-.small-btn:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-}
-
-.footer {
+.credit {
     text-align: center;
-    color: #64748b;
+    color: #71819c;
     font-size: 12px;
-    margin-top: 25px;
+    margin-top: 15px;
 }
 
-.footer span {
-    color: #a78bfa;
-}
-
-@media (max-width: 480px) {
+@media(max-width: 360px) {
     .calculator {
-        padding: 22px;
-        border-radius: 23px;
+        padding: 17px;
     }
 
-    h1 {
-        font-size: 24px;
-    }
-
-    .result-value {
-        font-size: 30px;
-    }
-
-    body {
-        padding: 12px;
+    .key {
+        min-height: 51px;
     }
 }
 </style>
@@ -269,74 +177,98 @@ button:active {
 
 <div class="calculator">
 
-    <div class="top">
-        <div class="logo">🧮</div>
-        <h1>Rishav's Calculator</h1>
-        <div class="subtitle">Smart calculations. Simple answers.</div>
-    </div>
+    <h1>🧮 Rishav's Calculator</h1>
+    <div class="subtitle">Your Smart Voice Calculator</div>
 
-    <label class="label" for="question">ENTER YOUR CALCULATION</label>
-
-    <div class="input-wrap">
+    <div class="display">
         <input
-            id="question"
+            id="expression"
             type="text"
-            placeholder="Try 25 × 8 or 100 + 50..."
+            placeholder="Enter calculation..."
             autocomplete="off"
         >
-
-        <button class="clear" onclick="clearInput()" title="Clear">×</button>
+        <div id="answer">0</div>
     </div>
 
-    <div class="buttons">
-        <button class="calculate" onclick="calculate()">⚡ Calculate</button>
-        <button class="mic" id="micButton" onclick="startListening()">🎤 Speak</button>
+    <div class="controls">
+        <button class="control speak" onclick="startListening()">
+            🎤 SPEAK
+        </button>
+
+        <button class="control listen" onclick="listenAnswer()">
+            🔊 LISTEN
+        </button>
     </div>
 
-    <div class="status" id="status"></div>
+    <div class="keypad">
+        <button class="key clear" onclick="clearAll()">C</button>
+        <button class="key operator" onclick="deleteLast()">⌫</button>
+        <button class="key operator" onclick="addValue('(')">(</button>
+        <button class="key operator" onclick="addValue(')')">)</button>
 
-    <div class="result">
-        <div class="result-head">
-            <span>Your Answer</span>
-            <span>✦ Result</span>
-        </div>
+        <button class="key" onclick="addValue('7')">7</button>
+        <button class="key" onclick="addValue('8')">8</button>
+        <button class="key" onclick="addValue('9')">9</button>
+        <button class="key operator" onclick="addValue('÷')">÷</button>
 
-        <div class="result-value" id="answer">—</div>
+        <button class="key" onclick="addValue('4')">4</button>
+        <button class="key" onclick="addValue('5')">5</button>
+        <button class="key" onclick="addValue('6')">6</button>
+        <button class="key operator" onclick="addValue('×')">×</button>
 
-        <div class="result-actions">
-            <button class="small-btn" id="copyButton" onclick="copyAnswer()" disabled>📋 Copy</button>
-            <button class="small-btn" id="speakButton" onclick="speakCurrentAnswer()" disabled>🔊 Speak</button>
-        </div>
+        <button class="key" onclick="addValue('1')">1</button>
+        <button class="key" onclick="addValue('2')">2</button>
+        <button class="key" onclick="addValue('3')">3</button>
+        <button class="key operator" onclick="addValue('-')">−</button>
+
+        <button class="key" onclick="addValue('0')">0</button>
+        <button class="key" onclick="addValue('.')">.</button>
+        <button class="key equals" onclick="calculate()">=</button>
+        <button class="key operator" onclick="addValue('+')">+</button>
     </div>
 
-    <div class="footer">
-        Made with ❤️ by <span>Rishav</span>
-    </div>
+    <div class="status" id="status">Ready to calculate!</div>
+
+    <div class="credit">Made by Rishav</div>
 
 </div>
 
 <script>
+const expressionInput = document.getElementById("expression");
+const answerDisplay = document.getElementById("answer");
+const statusDisplay = document.getElementById("status");
+
 let currentAnswer = null;
 
-async function calculate() {
+function addValue(value) {
+    expressionInput.value += value;
+    expressionInput.focus();
+}
 
-    const question = document.getElementById("question").value.trim();
-    const answerBox = document.getElementById("answer");
-    const status = document.getElementById("status");
+function clearAll() {
+    expressionInput.value = "";
+    answerDisplay.textContent = "0";
+    currentAnswer = null;
+    statusDisplay.textContent = "Cleared!";
+}
+
+function deleteLast() {
+    expressionInput.value = expressionInput.value.slice(0, -1);
+    expressionInput.focus();
+}
+
+async function calculate() {
+    const question = expressionInput.value.trim();
 
     if (!question) {
-        status.innerText = "Please enter a calculation.";
+        statusDisplay.textContent = "Please enter a calculation!";
         return;
     }
 
-    answerBox.innerText = "Calculating...";
-    status.innerText = "";
-
-    document.getElementById("copyButton").disabled = true;
-    document.getElementById("speakButton").disabled = true;
+    statusDisplay.textContent = "Calculating...";
+    currentAnswer = null;
 
     try {
-
         const response = await fetch("/calculate", {
             method: "POST",
             headers: {
@@ -349,88 +281,52 @@ async function calculate() {
 
         const data = await response.json();
 
-        if (!response.ok || data.success === false) {
+        if (!response.ok || !data.success) {
             throw new Error(data.error || "Calculation failed");
         }
 
-        currentAnswer = data.answer ?? data.result;
-
-        answerBox.innerText = currentAnswer;
-        status.innerText = "Calculation completed successfully!";
-
-        document.getElementById("copyButton").disabled = false;
-        document.getElementById("speakButton").disabled = false;
-
-        speakAnswer(currentAnswer);
+        currentAnswer = data.result;
+        answerDisplay.textContent = data.result;
+        statusDisplay.textContent = "Calculation successful!";
 
     } catch (error) {
-
-        currentAnswer = null;
-        answerBox.innerText = "Error";
-        status.innerText = error.message;
-
+        answerDisplay.textContent = "Error";
+        statusDisplay.textContent = error.message;
     }
 }
 
-async function copyAnswer() {
-
-    if (currentAnswer === null) return;
-
-    try {
-        await navigator.clipboard.writeText(String(currentAnswer));
-        document.getElementById("status").innerText = "Answer copied!";
-    } catch (error) {
-        document.getElementById("status").innerText = "Copy failed. Please copy manually.";
+function listenAnswer() {
+    if (currentAnswer === null) {
+        statusDisplay.textContent = "Calculate something first!";
+        return;
     }
-}
 
-function speakCurrentAnswer() {
-
-    if (currentAnswer !== null) {
-        speakAnswer(currentAnswer);
+    if (!("speechSynthesis" in window)) {
+        statusDisplay.textContent = "Speech is not supported in this browser.";
+        return;
     }
-}
-
-function speakAnswer(text) {
-
-    if (!("speechSynthesis" in window)) return;
 
     window.speechSynthesis.cancel();
 
-    const speech = new SpeechSynthesisUtterance(String(text));
+    const speech = new SpeechSynthesisUtterance(
+        "The answer is " + currentAnswer
+    );
+
     speech.lang = "en-IN";
-    speech.rate = 1;
+    speech.rate = 0.9;
 
     window.speechSynthesis.speak(speech);
-}
-
-function clearInput() {
-
-    document.getElementById("question").value = "";
-    document.getElementById("answer").innerText = "—";
-    document.getElementById("status").innerText = "";
-
-    currentAnswer = null;
-
-    document.getElementById("copyButton").disabled = true;
-    document.getElementById("speakButton").disabled = true;
-
-    window.speechSynthesis.cancel();
-
-    document.getElementById("question").focus();
+    statusDisplay.textContent = "Speaking your answer...";
 }
 
 function startListening() {
-
     const SpeechRecognition =
         window.SpeechRecognition ||
         window.webkitSpeechRecognition;
 
-    const status = document.getElementById("status");
-    const micButton = document.getElementById("micButton");
-
     if (!SpeechRecognition) {
-        status.innerText = "Voice recognition is not supported in this browser.";
+        statusDisplay.textContent =
+            "Voice input is not supported. Try Chrome.";
         return;
     }
 
@@ -440,40 +336,32 @@ function startListening() {
     recognition.continuous = false;
     recognition.interimResults = false;
 
-    micButton.classList.add("listening");
-    micButton.innerText = "🔴 Listening...";
-    status.innerText = "Listening. Speak now!";
+    statusDisplay.textContent = "🎤 Listening... Speak now!";
 
     recognition.onresult = function(event) {
+        const spokenText = event.results[0][0].transcript;
 
-        const text = event.results[0][0].transcript;
-
-        document.getElementById("question").value = text;
-        status.innerText = "Recognized: " + text;
+        expressionInput.value = spokenText;
+        statusDisplay.textContent = "You said: " + spokenText;
 
         calculate();
     };
 
-    recognition.onerror = function(event) {
-        status.innerText = "Voice error: " + event.error;
+    recognition.onerror = function() {
+        statusDisplay.textContent =
+            "Microphone error. Please try again.";
     };
 
     recognition.onend = function() {
-        micButton.classList.remove("listening");
-        micButton.innerText = "🎤 Speak";
+        if (statusDisplay.textContent === "🎤 Listening... Speak now!") {
+            statusDisplay.textContent = "Ready!";
+        }
     };
 
-    try {
-        recognition.start();
-    } catch (error) {
-        status.innerText = "Microphone could not start.";
-        micButton.classList.remove("listening");
-        micButton.innerText = "🎤 Speak";
-    }
+    recognition.start();
 }
 
-document.getElementById("question").addEventListener("keydown", function(event) {
-
+expressionInput.addEventListener("keydown", function(event) {
     if (event.key === "Enter") {
         calculate();
     }
