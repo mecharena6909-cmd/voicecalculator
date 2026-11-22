@@ -2,290 +2,483 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Google Search Console Verification -->
-    <meta name="google-site-verification"
-          content="ugNqtReIBORWjvmHZWHtdlhS_gTzaQPPcT1lYxbKif4" />
+<meta name="google-site-verification" content="ugNqtReIBORWjvmHZWHtdlhS_gTzaQPPcT1lYxbKif4">
 
-    <title>Rishav's Calculator</title>
+<title>Rishav's Calculator</title>
+<meta name="description" content="Rishav's Calculator - A smart voice and scientific calculator.">
 
-    <meta name="description"
-          content="Rishav's Calculator is a smart voice-controlled calculator. Ask mathematical questions and get instant answers.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <meta name="keywords"
-          content="Rishav Calculator, Voice Calculator, Online Calculator, Smart Calculator">
+<style>
+* {
+    box-sizing: border-box;
+}
 
-    <style>
-        * {
-            box-sizing: border-box;
-        }
+:root {
+    --bg: #080b14;
+    --panel: #111827;
+    --text: #f8fafc;
+    --muted: #94a3b8;
+    --accent: #8b5cf6;
+    --accent2: #06b6d4;
+}
 
-        body {
-            margin: 0;
-            min-height: 100vh;
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #080b20, #172554, #312e81);
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: 'Space Grotesk', sans-serif;
+    background:
+        radial-gradient(circle at 15% 15%, #312e8155, transparent 40%),
+        radial-gradient(circle at 85% 80%, #0891b255, transparent 40%),
+        var(--bg);
+    color: var(--text);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
 
-        .calculator {
-            width: 100%;
-            max-width: 480px;
-            background: rgba(255,255,255,0.08);
-            padding: 30px;
-            border-radius: 25px;
-            border: 1px solid rgba(255,255,255,0.15);
-            box-shadow: 0 15px 50px rgba(0,0,0,0.4);
-            text-align: center;
-        }
+.calculator {
+    width: 100%;
+    max-width: 520px;
+    background: rgba(17, 24, 39, 0.85);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 28px;
+    padding: 30px;
+    box-shadow: 0 25px 80px rgba(0,0,0,0.45);
+    backdrop-filter: blur(20px);
+}
 
-        h1 {
-            font-size: 30px;
-            margin-bottom: 8px;
-        }
+.top {
+    text-align: center;
+    margin-bottom: 28px;
+}
 
-        .subtitle {
-            color: #c7d2fe;
-            margin-bottom: 25px;
-        }
+.logo {
+    width: 70px;
+    height: 70px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto 15px;
+    border-radius: 22px;
+    background: linear-gradient(135deg, #8b5cf6, #06b6d4);
+    font-size: 32px;
+    box-shadow: 0 10px 30px #8b5cf644;
+}
 
-        input {
-            width: 100%;
-            padding: 17px;
-            border: none;
-            outline: none;
-            border-radius: 12px;
-            font-size: 17px;
-            margin-bottom: 15px;
-            background: #f8fafc;
-            color: #111827;
-        }
+h1 {
+    font-size: 28px;
+    margin: 0;
+    letter-spacing: -1px;
+}
 
-        button {
-            width: 100%;
-            padding: 15px;
-            margin: 7px 0;
-            border: none;
-            border-radius: 12px;
-            font-size: 17px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.2s;
-        }
+.subtitle {
+    color: var(--muted);
+    font-size: 14px;
+    margin-top: 8px;
+}
 
-        button:hover {
-            transform: scale(1.02);
-            opacity: 0.9;
-        }
+.label {
+    font-size: 13px;
+    color: var(--muted);
+    display: block;
+    text-align: left;
+    margin-bottom: 10px;
+}
 
-        .calculate {
-            background: #6366f1;
-            color: white;
-        }
+.input-wrap {
+    position: relative;
+}
 
-        .speak {
-            background: #16a34a;
-            color: white;
-        }
+input {
+    width: 100%;
+    padding: 18px;
+    padding-right: 50px;
+    border: 1px solid #334155;
+    border-radius: 16px;
+    outline: none;
+    font-family: inherit;
+    font-size: 16px;
+    color: white;
+    background: #0b1220;
+    transition: 0.2s;
+}
 
-        .answer {
-            margin-top: 22px;
-            padding: 20px;
-            border-radius: 15px;
-            background: rgba(0,0,0,0.25);
-            min-height: 65px;
-            font-size: 19px;
-            overflow-wrap: anywhere;
-        }
+input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px #8b5cf622;
+}
 
-        .footer {
-            margin-top: 25px;
-            color: #c7d2fe;
-            font-size: 13px;
-        }
+input::placeholder {
+    color: #64748b;
+}
 
-        #status {
-            color: #a5f3fc;
-            font-size: 14px;
-            min-height: 20px;
-        }
-    </style>
+.clear {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+button {
+    border: none;
+    border-radius: 14px;
+    padding: 15px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    transition: transform 0.2s, opacity 0.2s;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    opacity: 0.92;
+}
+
+button:active {
+    transform: scale(0.97);
+}
+
+.calculate {
+    background: linear-gradient(135deg, #8b5cf6, #6366f1);
+    color: white;
+}
+
+.mic {
+    background: linear-gradient(135deg, #0891b2, #06b6d4);
+    color: white;
+}
+
+.mic.listening {
+    background: #dc2626;
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    50% {
+        opacity: 0.6;
+    }
+}
+
+.status {
+    color: #67e8f9;
+    font-size: 13px;
+    min-height: 22px;
+    margin: 14px 0 0;
+    text-align: center;
+}
+
+.result {
+    margin-top: 25px;
+    border: 1px solid #334155;
+    border-radius: 20px;
+    padding: 22px;
+    background: linear-gradient(135deg, #1e293b88, #0f172a);
+    min-height: 130px;
+}
+
+.result-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--muted);
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.result-value {
+    font-size: 36px;
+    font-weight: 700;
+    overflow-wrap: anywhere;
+    margin-top: 18px;
+    color: #a5b4fc;
+}
+
+.result-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 18px;
+}
+
+.small-btn {
+    background: #1e293b;
+    color: #cbd5e1;
+    border: 1px solid #334155;
+    padding: 10px 14px;
+    font-size: 13px;
+}
+
+.small-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.footer {
+    text-align: center;
+    color: #64748b;
+    font-size: 12px;
+    margin-top: 25px;
+}
+
+.footer span {
+    color: #a78bfa;
+}
+
+@media (max-width: 480px) {
+    .calculator {
+        padding: 22px;
+        border-radius: 23px;
+    }
+
+    h1 {
+        font-size: 24px;
+    }
+
+    .result-value {
+        font-size: 30px;
+    }
+
+    body {
+        padding: 12px;
+    }
+}
+</style>
 </head>
 
 <body>
 
-    <div class="calculator">
+<div class="calculator">
 
-        <h1>🧮 Rishav's Calculator</h1>
+    <div class="top">
+        <div class="logo">🧮</div>
+        <h1>Rishav's Calculator</h1>
+        <div class="subtitle">Smart calculations. Simple answers.</div>
+    </div>
 
-        <p class="subtitle">
-            Your Smart Voice Calculator
-        </p>
+    <label class="label" for="question">ENTER YOUR CALCULATION</label>
 
+    <div class="input-wrap">
         <input
-            type="text"
             id="question"
-            placeholder="Ask me anything..."
+            type="text"
+            placeholder="Try 25 × 8 or 100 + 50..."
             autocomplete="off"
         >
 
-        <button class="calculate" onclick="calculate()">
-            Calculate 🚀
-        </button>
-
-        <button class="speak" onclick="startListening()">
-            🎤 Speak
-        </button>
-
-        <p id="status"></p>
-
-        <div class="answer" id="answer">
-            Your answer will appear here.
-        </div>
-
-        <div class="footer">
-            Made with ❤️ by Rishav
-        </div>
-
+        <button class="clear" onclick="clearInput()" title="Clear">×</button>
     </div>
 
-    <script>
+    <div class="buttons">
+        <button class="calculate" onclick="calculate()">⚡ Calculate</button>
+        <button class="mic" id="micButton" onclick="startListening()">🎤 Speak</button>
+    </div>
 
-        async function calculate() {
+    <div class="status" id="status"></div>
 
-            const question = document.getElementById("question").value.trim();
+    <div class="result">
+        <div class="result-head">
+            <span>Your Answer</span>
+            <span>✦ Result</span>
+        </div>
 
-            const answerBox = document.getElementById("answer");
-            const status = document.getElementById("status");
+        <div class="result-value" id="answer">—</div>
 
-            if (!question) {
-                answerBox.innerText = "Please enter a question!";
-                return;
-            }
+        <div class="result-actions">
+            <button class="small-btn" id="copyButton" onclick="copyAnswer()" disabled>📋 Copy</button>
+            <button class="small-btn" id="speakButton" onclick="speakCurrentAnswer()" disabled>🔊 Speak</button>
+        </div>
+    </div>
 
-            answerBox.innerText = "Calculating...";
-            status.innerText = "";
+    <div class="footer">
+        Made with ❤️ by <span>Rishav</span>
+    </div>
 
-            try {
+</div>
 
-                const response = await fetch("/calculate", {
+<script>
+let currentAnswer = null;
 
-                    method: "POST",
+async function calculate() {
 
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
+    const question = document.getElementById("question").value.trim();
+    const answerBox = document.getElementById("answer");
+    const status = document.getElementById("status");
 
-                    body: JSON.stringify({
-                        question: question
-                    })
+    if (!question) {
+        status.innerText = "Please enter a calculation.";
+        return;
+    }
 
-                });
+    answerBox.innerText = "Calculating...";
+    status.innerText = "";
 
-                const data = await response.json();
+    document.getElementById("copyButton").disabled = true;
+    document.getElementById("speakButton").disabled = true;
 
-                if (!response.ok) {
-                    throw new Error(data.error || "Calculation failed");
-                }
+    try {
 
-                answerBox.innerText = data.answer;
+        const response = await fetch("/calculate", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                question: question
+            })
+        });
 
-                speakAnswer(data.answer);
+        const data = await response.json();
 
-            } catch (error) {
-
-                answerBox.innerText = "Error: " + error.message;
-
-            }
-
+        if (!response.ok || data.success === false) {
+            throw new Error(data.error || "Calculation failed");
         }
 
-        function startListening() {
+        currentAnswer = data.answer ?? data.result;
 
-            const SpeechRecognition =
-                window.SpeechRecognition ||
-                window.webkitSpeechRecognition;
+        answerBox.innerText = currentAnswer;
+        status.innerText = "Calculation completed successfully!";
 
-            if (!SpeechRecognition) {
-                document.getElementById("status").innerText =
-                    "Voice recognition is not supported in this browser.";
-                return;
-            }
+        document.getElementById("copyButton").disabled = false;
+        document.getElementById("speakButton").disabled = false;
 
-            const recognition = new SpeechRecognition();
+        speakAnswer(currentAnswer);
 
-            recognition.lang = "en-IN";
-            recognition.continuous = false;
-            recognition.interimResults = false;
+    } catch (error) {
 
-            document.getElementById("status").innerText =
-                "🎤 Listening...";
+        currentAnswer = null;
+        answerBox.innerText = "Error";
+        status.innerText = error.message;
 
-            recognition.onresult = function(event) {
+    }
+}
 
-                const text = event.results[0][0].transcript;
+async function copyAnswer() {
 
-                document.getElementById("question").value = text;
+    if (currentAnswer === null) return;
 
-                document.getElementById("status").innerText =
-                    "You said: " + text;
+    try {
+        await navigator.clipboard.writeText(String(currentAnswer));
+        document.getElementById("status").innerText = "Answer copied!";
+    } catch (error) {
+        document.getElementById("status").innerText = "Copy failed. Please copy manually.";
+    }
+}
 
-                calculate();
+function speakCurrentAnswer() {
 
-            };
+    if (currentAnswer !== null) {
+        speakAnswer(currentAnswer);
+    }
+}
 
-            recognition.onerror = function(event) {
+function speakAnswer(text) {
 
-                document.getElementById("status").innerText =
-                    "Voice error: " + event.error;
+    if (!("speechSynthesis" in window)) return;
 
-            };
+    window.speechSynthesis.cancel();
 
-            recognition.onend = function() {
+    const speech = new SpeechSynthesisUtterance(String(text));
+    speech.lang = "en-IN";
+    speech.rate = 1;
 
-                if (document.getElementById("status").innerText ===
-                    "🎤 Listening...") {
-                    document.getElementById("status").innerText =
-                        "Listening stopped.";
-                }
+    window.speechSynthesis.speak(speech);
+}
 
-            };
+function clearInput() {
 
-            recognition.start();
+    document.getElementById("question").value = "";
+    document.getElementById("answer").innerText = "—";
+    document.getElementById("status").innerText = "";
 
-        }
+    currentAnswer = null;
 
-        function speakAnswer(text) {
+    document.getElementById("copyButton").disabled = true;
+    document.getElementById("speakButton").disabled = true;
 
-            if (!("speechSynthesis" in window)) return;
+    window.speechSynthesis.cancel();
 
-            window.speechSynthesis.cancel();
+    document.getElementById("question").focus();
+}
 
-            const speech = new SpeechSynthesisUtterance(String(text));
+function startListening() {
 
-            speech.lang = "en-IN";
-            speech.rate = 1;
+    const SpeechRecognition =
+        window.SpeechRecognition ||
+        window.webkitSpeechRecognition;
 
-            window.speechSynthesis.speak(speech);
+    const status = document.getElementById("status");
+    const micButton = document.getElementById("micButton");
 
-        }
+    if (!SpeechRecognition) {
+        status.innerText = "Voice recognition is not supported in this browser.";
+        return;
+    }
 
-        document.getElementById("question").addEventListener(
-            "keydown",
-            function(event) {
-                if (event.key === "Enter") {
-                    calculate();
-                }
-            }
-        );
+    const recognition = new SpeechRecognition();
 
-    </script>
+    recognition.lang = "en-IN";
+    recognition.continuous = false;
+    recognition.interimResults = false;
+
+    micButton.classList.add("listening");
+    micButton.innerText = "🔴 Listening...";
+    status.innerText = "Listening. Speak now!";
+
+    recognition.onresult = function(event) {
+
+        const text = event.results[0][0].transcript;
+
+        document.getElementById("question").value = text;
+        status.innerText = "Recognized: " + text;
+
+        calculate();
+    };
+
+    recognition.onerror = function(event) {
+        status.innerText = "Voice error: " + event.error;
+    };
+
+    recognition.onend = function() {
+        micButton.classList.remove("listening");
+        micButton.innerText = "🎤 Speak";
+    };
+
+    try {
+        recognition.start();
+    } catch (error) {
+        status.innerText = "Microphone could not start.";
+        micButton.classList.remove("listening");
+        micButton.innerText = "🎤 Speak";
+    }
+}
+
+document.getElementById("question").addEventListener("keydown", function(event) {
+
+    if (event.key === "Enter") {
+        calculate();
+    }
+});
+</script>
 
 </body>
 </html>
