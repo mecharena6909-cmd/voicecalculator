@@ -239,6 +239,7 @@ const answerDisplay = document.getElementById("answer");
 const statusDisplay = document.getElementById("status");
 
 let currentAnswer = null;
+let voiceEnabled = false;
 
 function addValue(value) {
     expressionInput.value += value;
@@ -249,12 +250,32 @@ function clearAll() {
     expressionInput.value = "";
     answerDisplay.textContent = "0";
     currentAnswer = null;
+
+    if ("speechSynthesis" in window) {
+        window.speechSynthesis.cancel();
+    }
+
     statusDisplay.textContent = "Cleared!";
 }
 
 function deleteLast() {
     expressionInput.value = expressionInput.value.slice(0, -1);
     expressionInput.focus();
+}
+
+function speakText(text) {
+    if (!("speechSynthesis" in window)) {
+        statusDisplay.textContent = "Speech is not supported in this browser.";
+        return;
+    }
+
+    window.speechSynthesis.cancel();
+
+    const speech = new SpeechSynthesisUtterance(String(text));
+    speech.lang = "en-IN";
+    speech.rate = 0.9;
+
+    window.speechSynthesis.speak(speech);
 }
 
 async function calculate() {
@@ -289,6 +310,9 @@ async function calculate() {
         answerDisplay.textContent = data.result;
         statusDisplay.textContent = "Calculation successful!";
 
+        // Automatically speak the answer after a successful calculation.
+        speakText("The answer is " + currentAnswer);
+
     } catch (error) {
         answerDisplay.textContent = "Error";
         statusDisplay.textContent = error.message;
@@ -301,21 +325,7 @@ function listenAnswer() {
         return;
     }
 
-    if (!("speechSynthesis" in window)) {
-        statusDisplay.textContent = "Speech is not supported in this browser.";
-        return;
-    }
-
-    window.speechSynthesis.cancel();
-
-    const speech = new SpeechSynthesisUtterance(
-        "The answer is " + currentAnswer
-    );
-
-    speech.lang = "en-IN";
-    speech.rate = 0.9;
-
-    window.speechSynthesis.speak(speech);
+    speakText("The answer is " + currentAnswer);
     statusDisplay.textContent = "Speaking your answer...";
 }
 
@@ -336,6 +346,7 @@ function startListening() {
     recognition.continuous = false;
     recognition.interimResults = false;
 
+    voiceEnabled = true;
     statusDisplay.textContent = "🎤 Listening... Speak now!";
 
     recognition.onresult = function(event) {
@@ -353,12 +364,14 @@ function startListening() {
     };
 
     recognition.onend = function() {
-        if (statusDisplay.textContent === "🎤 Listening... Speak now!") {
-            statusDisplay.textContent = "Ready!";
-        }
+        voiceEnabled = false;
     };
 
-    recognition.start();
+    try {
+        recognition.start();
+    } catch (error) {
+        statusDisplay.textContent = "Please try the microphone again.";
+    }
 }
 
 expressionInput.addEventListener("keydown", function(event) {
